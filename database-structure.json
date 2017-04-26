@@ -1,0 +1,81 @@
+{
+
+    "users": {
+        "iron-man-uid": {
+            "name": "Iron Man",
+            "email": "iron@starkindustries.com",
+            "username": "ironman",
+            "photo": "storage-photo-url"
+        },
+        "war-machine-uid": {
+            "name": "War Machine",
+            "email": "warmachine@starkindustries.com",
+            "username": "warmachine",
+            "photo": "storage-photo-url"
+        },
+        "other-user-uid": {
+            "name": "Other User",
+            "email": "other@email.com",
+            "username": "otheruser",
+            "photo": "storage-photo-url"
+        }
+    },
+
+    "chats": { // /chats/iron-man-uid/war-machine-uid
+        "iron-man-uid": {
+            "war-machine-uid": {
+                "lastMessage": "Hey War Machine!",
+                "timestamp": 1491491503208,
+                "title": "War Machine",
+                "photo": "photo-url"
+            },
+            "other-user-uid": {
+                "lastMessage": "Hello!",
+                "timestamp": 1491491504565,
+                "title": "Other User",
+                "photo": "photo-url"
+            }
+        },
+        "war-machine-uid": {
+            "iron-man-uid": {
+                "lastMessage": "Hey War Machine!",
+                "timestamp": 1491491503208,
+                "title": "Iron Man",
+                "photo": "photo-url"
+            }
+        },
+        "other-user-uid": {
+            "iron-man-uid": {
+                "lastMessage": "Hello!",
+                "timestamp": 1491491504565,
+                "title": "Iron Man",
+                "photo": "photo-url"
+            }
+        }
+    },
+
+    "messages": {
+        "iron-man-uid + war-machine-uid": {
+            "message-uid-01": {
+                "userId": "war-machine-uid",
+                "text": "Hey Iron Man!",
+                "timestamp": 1491499435726
+            },
+            "message-uid-02": {
+                "sender": "Iron Man",
+                "userId": "iron-man-uid",
+                "text": "Hey War Machine!",
+                "timestamp": 1491499434895
+            }
+        },
+        "other-user-uid + iron-man-uid": {
+            "message-uid-01": {
+                "sender": "Other User",
+                "userId": "other-user-uid",
+                "text": "Hello!",
+                "timestamp": 1491499435726
+            }
+        }
+    }
+
+}

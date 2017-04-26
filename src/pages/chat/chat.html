@@ -1,0 +1,25 @@
+<ion-header>
+
+  <custom-logged-header [title]="pageTitle" [user]="recipient"></custom-logged-header>
+
+</ion-header>
+
+
+<ion-content padding>
+
+  <message-box *ngFor="let m of messages | async" [message]="m" [isFromSender]="(m.userId === sender.$key)"></message-box>
+
+</ion-content>
+
+<ion-footer>
+
+  <ion-toolbar>
+    <ion-item no-lines>
+      <ion-input type="text" (keyup.enter)="sendMessage(newMessage); newMessage=''" placeholder="Message..." [(ngModel)]="newMessage"></ion-input>
+      <button ion-button item-right (click)="sendMessage(newMessage); newMessage=''">
+        <ion-icon name="send"></ion-icon>
+      </button>
+    </ion-item>
+  </ion-toolbar>
+
+</ion-footer>
