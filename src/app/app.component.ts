@@ -6,6 +6,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { FirebaseAuthState } from 'angularfire2';
 
 import { AuthService } from './../providers/auth.service';
+import { HomePage } from './../pages/home/home';
 import { SigninPage } from './../pages/signin/signin';
 import { User } from './../models/user.model';
 import { UserService } from './../providers/user.service';
@@ -15,7 +16,7 @@ import { UserService } from './../providers/user.service';
 })
 export class MyApp {
 
-  rootPage:any = SigninPage;
+  rootPage:any;
   currentUser: User;
 
   constructor(
@@ -31,10 +32,18 @@ export class MyApp {
       .subscribe((authState: FirebaseAuthState) => {
 
         if (authState) {
+
+          this.rootPage = HomePage;
+
           userService.currentUser
             .subscribe((user: User) => {
               this.currentUser = user;
             });
+
+        } else {
+
+          this.rootPage = SigninPage;
+
         }
 
       });
