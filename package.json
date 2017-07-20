@@ -29,8 +29,8 @@
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.12",
 
-    "angularfire2": "^2.0.0-beta.8",
-    "firebase": "^3.7.4"
+    "angularfire2": "^4.0.0-rc.1",
+    "firebase": "^4.0.0"
   },
   "devDependencies": {
     "@ionic/app-scripts": "1.3.7",
