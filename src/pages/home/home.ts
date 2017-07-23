@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { MenuController, NavController } from 'ionic-angular';
 
-import { FirebaseListObservable } from 'angularfire2';
+import { FirebaseListObservable } from 'angularfire2/database';
 
 import { AuthService } from './../../providers/auth.service';
 import { Chat } from './../../models/chat.model';
@@ -12,7 +12,7 @@ import { SignupPage } from './../signup/signup';
 import { User } from './../../models/user.model';
 import { UserService } from './../../providers/user.service';
 
-import firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'page-home',

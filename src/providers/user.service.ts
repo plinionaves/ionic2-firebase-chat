@@ -4,10 +4,14 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import 'rxjs/add/operator/map';
 
-import { AngularFire, FirebaseApp, FirebaseAuthState, FirebaseListObservable, FirebaseObjectObservable } from "angularfire2";
+import { FirebaseApp } from "angularfire2";
+import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from "angularfire2/database";
 
 import { BaseService } from "./base.service";
 import { User } from './../models/user.model';
+
+import * as firebase from 'firebase/app';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -16,8 +20,9 @@ export class UserService extends BaseService {
   currentUser: FirebaseObjectObservable<User>;
 
   constructor(
-    public af: AngularFire,
-    @Inject(FirebaseApp) public firebaseApp: any,
+    public afAuth: AngularFireAuth,
+    public db: AngularFireDatabase,
+    public firebaseApp: FirebaseApp,
     public http: Http
   ) {
     super();
@@ -25,7 +30,7 @@ export class UserService extends BaseService {
   }
 
   private setUsers(uidToExclude: string): void {
-    this.users = <FirebaseListObservable<User[]>>this.af.database.list(`/users`, {
+    this.users = <FirebaseListObservable<User[]>>this.db.list(`/users`, {
       query: {
         orderByChild: 'name'
       }
@@ -35,18 +40,19 @@ export class UserService extends BaseService {
   }
 
   private listenAuthState(): void {
-    this.af.auth
-      .subscribe((authState: FirebaseAuthState) => {
-        if (authState) {
+    this.afAuth
+      .authState
+      .subscribe((authUser: firebase.User) => {
+        if (authUser) {
           console.log('Auth state alterado!');          
-          this.currentUser = this.af.database.object(`/users/${authState.auth.uid}`);
-          this.setUsers(authState.auth.uid);
+          this.currentUser = this.db.object(`/users/${authUser.uid}`);
+          this.setUsers(authUser.uid);
         }
       });
   }
 
   create(user: User, uuid: string): firebase.Promise<void> {
-    return this.af.database.object(`/users/${uuid}`)
+    return this.db.object(`/users/${uuid}`)
       .set(user)
       .catch(this.handlePromiseError);
   }
@@ -58,7 +64,7 @@ export class UserService extends BaseService {
   }
 
   userExists(username: string): Observable<boolean> {
-    return this.af.database.list(`/users`, {
+    return this.db.list(`/users`, {
       query: {
         orderByChild: 'username',
         equalTo: username
@@ -69,7 +75,7 @@ export class UserService extends BaseService {
   }
 
   get(userId: string): FirebaseObjectObservable<User> {
-    return <FirebaseObjectObservable<User>>this.af.database.object(`/users/${userId}`)
+    return <FirebaseObjectObservable<User>>this.db.object(`/users/${userId}`)
       .catch(this.handleObservableError);
   }
 

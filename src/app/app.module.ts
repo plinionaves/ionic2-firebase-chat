@@ -6,7 +6,9 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
-import { AngularFireModule, AuthMethods, AuthProviders, FirebaseAppConfig } from 'angularfire2';
+import { AngularFireModule, FirebaseAppConfig } from 'angularfire2';
+import { AngularFireAuthModule } from 'angularfire2/auth';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 
 import { AuthService } from './../providers/auth.service';
 import { CapitalizePipe } from './../pipes/capitalize.pipe';
@@ -33,11 +35,6 @@ const firebaseAppConfig: FirebaseAppConfig = {
     messagingSenderId: "537415984013"
 };
 
-const firebaseAuthConfig = {
-  provider: AuthProviders.Custom,
-  method: AuthMethods.Password
-}
-
 @NgModule({
   declarations: [
     CapitalizePipe,
@@ -54,7 +51,9 @@ const firebaseAuthConfig = {
     UserProfilePage
   ],
   imports: [
-    AngularFireModule.initializeApp(firebaseAppConfig, firebaseAuthConfig),
+    AngularFireModule.initializeApp(firebaseAppConfig),
+    AngularFireAuthModule,
+    AngularFireDatabaseModule,
     BrowserModule,
     HttpModule,
     IonicModule.forRoot(MyApp)

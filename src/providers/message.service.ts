@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 import { BaseService } from "./base.service";
 import { Message } from '../models/message.model';
@@ -11,7 +11,7 @@ import { Message } from '../models/message.model';
 export class MessageService extends BaseService {
 
   constructor(
-    public af: AngularFire,
+    public db: AngularFireDatabase,
     public http: Http
   ) {
     super();
@@ -23,7 +23,7 @@ export class MessageService extends BaseService {
   }
 
   getMessages(userId1: string, userId2: string): FirebaseListObservable<Message[]> {
-    return <FirebaseListObservable<Message[]>>this.af.database.list(`/messages/${userId1}-${userId2}`, {
+    return <FirebaseListObservable<Message[]>>this.db.list(`/messages/${userId1}-${userId2}`, {
       query: {
         orderByChild: 'timestamp',
         limitToLast: 30

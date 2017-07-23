@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController, NavParams } from 'ionic-angular';
 
-import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
+import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
 
 import { AuthService } from './../../providers/auth.service';
 import { Chat } from './../../models/chat.model';
@@ -11,7 +11,7 @@ import { MessageService } from './../../providers/message.service';
 import { User } from './../../models/user.model';
 import { UserService } from './../../providers/user.service';
 
-import firebase from 'firebase';
+import * as firebase from 'firebase/app';
 
 @Component({
   selector: 'page-chat',
