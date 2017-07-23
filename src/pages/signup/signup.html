@@ -16,22 +16,22 @@
   <form [formGroup]="signupForm" (ngSubmit)="onSubmit(); $event.preventDefault()">
 
     <ion-item>
-      <ion-icon name="person" item-left color="primary"></ion-icon>
+      <ion-icon name="person" item-start color="primary"></ion-icon>
       <ion-input type="text" placeholder="Name" formControlName="name"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-icon name="at" item-left color="primary"></ion-icon>
+      <ion-icon name="at" item-start color="primary"></ion-icon>
       <ion-input type="text" placeholder="Username" formControlName="username"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-icon name="mail" item-left color="primary"></ion-icon>
+      <ion-icon name="mail" item-start color="primary"></ion-icon>
       <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-icon name="lock" item-left color="primary"></ion-icon>
+      <ion-icon name="lock" item-start color="primary"></ion-icon>
       <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
     </ion-item>
 

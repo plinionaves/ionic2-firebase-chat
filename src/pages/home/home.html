@@ -25,7 +25,7 @@
 
     <ion-list *ngSwitchCase="'chats'" no-lines>
       <button ion-item *ngFor="let chat of chats | async" (click)="onChatOpen(chat)">
-        <ion-avatar item-left>
+        <ion-avatar item-start>
           <img [src]="chat.photo || 'assets/images/no-photo.jpg'">
         </ion-avatar>
         <h2>{{ chat.title }}</h2>
@@ -38,7 +38,7 @@
 
     <ion-list *ngSwitchCase="'users'" no-lines>
       <button ion-item *ngFor="let user of users | async" (click)="onChatCreate(user)">
-        <ion-avatar item-left>
+        <ion-avatar item-start>
           <img [src]="user.photo || 'assets/images/no-photo.jpg'">
         </ion-avatar>
         {{ user.name }}
