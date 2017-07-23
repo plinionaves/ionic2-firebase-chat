@@ -28,12 +28,12 @@
     "rxjs": "5.4.0",
     "sw-toolbox": "3.6.0",
     "zone.js": "0.8.12",
-
     "angularfire2": "^4.0.0-rc.1",
     "firebase": "^4.0.0"
   },
   "devDependencies": {
     "@ionic/app-scripts": "1.3.7",
+    "@ionic/cli-plugin-ionic-angular": "^1.3.2",
     "typescript": "2.3.4"
   },
   "cordovaPlugins": [
