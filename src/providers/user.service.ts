@@ -12,6 +12,7 @@ import { BaseService } from "./base.service";
 import { User } from './../models/user.model';
 
 import * as firebase from 'firebase/app';
+import 'firebase/storage';
 
 @Injectable()
 export class UserService extends BaseService {
@@ -26,7 +27,7 @@ export class UserService extends BaseService {
     public http: Http
   ) {
     super();
-    this.listenAuthState();
+    this.listenAuthState();    
   }
 
   private setUsers(uidToExclude: string): void {

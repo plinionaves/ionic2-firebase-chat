@@ -5,6 +5,8 @@ import { AuthService } from './../../providers/auth.service';
 import { User } from './../../models/user.model';
 import { UserService } from './../../providers/user.service';
 
+import * as firebase from 'firebase/app';
+
 @Component({
   selector: 'page-user-profile',
   templateUrl: 'user-profile.html',
@@ -42,13 +44,15 @@ export class UserProfilePage {
 
       let uploadTask = this.userService.uploadPhoto(this.filePhoto, this.currentUser.$key);
 
-      uploadTask.on('state_changed', (snapshot) => {
+      uploadTask.on('state_changed', (snapshot: firebase.storage.UploadTaskSnapshot) => {
 
         this.uploadProgress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
 
       }, (error: Error) => {
         // catch error
-      }, () => {
+      });
+
+      uploadTask.then((UploadTaskSnapshot: firebase.storage.UploadTaskSnapshot) => {
         this.editUser(uploadTask.snapshot.downloadURL);
       });
 
