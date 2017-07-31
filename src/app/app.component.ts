@@ -9,8 +9,6 @@ import { SigninPage } from './../pages/signin/signin';
 import { User } from './../models/user.model';
 import { UserService } from './../providers/user.service';
 
-import { Observable } from 'rxjs';
-
 import * as firebase from 'firebase/app';
 
 @Component({
