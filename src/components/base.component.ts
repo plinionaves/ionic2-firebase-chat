@@ -17,7 +17,7 @@ export abstract class BaseComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        this.navCtrl = this.app.getActiveNav();
+        this.navCtrl = this.app.getActiveNavs()[0];
     }
 
     onLogout(): void {
