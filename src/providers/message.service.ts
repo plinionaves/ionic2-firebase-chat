@@ -7,6 +7,8 @@ import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/databa
 import { BaseService } from "./base.service";
 import { Message } from '../models/message.model';
 
+import * as firebase from 'firebase/app';
+
 @Injectable()
 export class MessageService extends BaseService {
 
