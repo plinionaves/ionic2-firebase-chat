@@ -35,3 +35,4 @@ UserInterfaceState.xcuserstate
 
 # Custom
 typings/
+.sourcemaps/
