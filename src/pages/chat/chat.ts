@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Content, NavController, NavParams } from 'ionic-angular';
 
-import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireList, AngularFireObject } from 'angularfire2/database';
 
 import { AuthService } from './../../providers/auth.service';
 import { Chat } from './../../models/chat.model';
@@ -12,6 +12,7 @@ import { User } from './../../models/user.model';
 import { UserService } from './../../providers/user.service';
 
 import * as firebase from 'firebase/app';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-chat',
@@ -20,12 +21,13 @@ import * as firebase from 'firebase/app';
 export class ChatPage {
 
   @ViewChild(Content) content: Content;
-  messages: FirebaseListObservable<Message[]>;
+  messages: AngularFireList<Message>;
+  viewMessages: Observable<Message[]>;
   pageTitle: string;
   sender: User;
   recipient: User;
-  private chat1: FirebaseObjectObservable<Chat>;
-  private chat2: FirebaseObjectObservable<Chat>;
+  private chat1: AngularFireObject<Chat>;
+  private chat2: AngularFireObject<Chat>;
 
   constructor(
     public authService: AuthService,
@@ -46,7 +48,8 @@ export class ChatPage {
     this.recipient = this.navParams.get('recipientUser');
     this.pageTitle = this.recipient.name;
 
-    this.userService.currentUser
+    this.userService
+      .mapObjectKey<User>(this.userService.currentUser)
       .first()
       .subscribe((currentUser: User) => {
         this.sender = currentUser;
@@ -55,7 +58,8 @@ export class ChatPage {
         this.chat2 = this.chatService.getDeepChat(this.recipient.$key, this.sender.$key);
 
         if (this.recipient.photo) {
-          this.chat1
+          this.chatService
+            .mapObjectKey(this.chat1)
             .first()
             .subscribe((chat: Chat) => {
               this.chatService.updatePhoto(this.chat1, chat.photo, this.recipient.photo);
@@ -63,7 +67,8 @@ export class ChatPage {
         }
 
         let doSubscription = () => {
-          this.messages
+          this.viewMessages = this.messageService.mapListKeys<Message>(this.messages);
+          this.viewMessages
             .subscribe((messages: Message[]) => {
               this.scrollToBottom();
             });
@@ -73,6 +78,7 @@ export class ChatPage {
           .getMessages(this.sender.$key, this.recipient.$key);
 
         this.messages
+          .valueChanges()
           .first()
           .subscribe((messages: Message[]) => {
 
@@ -129,7 +135,7 @@ export class ChatPage {
 
   private scrollToBottom(duration?: number): void {
     setTimeout(() => {
-      if (this.content) {
+      if (this.content._scroll) {
         this.content.scrollToBottom(duration || 300);
       }
     }, 50);
