@@ -7,7 +7,7 @@
 
 <ion-content padding>
 
-  <message-box *ngFor="let m of messages | async" [message]="m" [isFromSender]="(m.userId === sender.$key)"></message-box>
+  <message-box *ngFor="let m of viewMessages | async" [message]="m" [isFromSender]="(m.userId === sender.$key)"></message-box>
 
 </ion-content>
 

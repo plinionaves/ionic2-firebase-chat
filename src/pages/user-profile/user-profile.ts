@@ -32,6 +32,7 @@ export class UserProfilePage {
 
   ionViewDidLoad() {
     this.userService.currentUser
+      .valueChanges()
       .subscribe((user: User) => {
         this.currentUser = user;
       });

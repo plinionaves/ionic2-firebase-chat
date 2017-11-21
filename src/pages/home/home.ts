@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { MenuController, NavController } from 'ionic-angular';
 
-import { FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireList } from 'angularfire2/database';
 
 import { AuthService } from './../../providers/auth.service';
 import { Chat } from './../../models/chat.model';
@@ -13,6 +13,7 @@ import { User } from './../../models/user.model';
 import { UserService } from './../../providers/user.service';
 
 import * as firebase from 'firebase/app';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'page-home',
@@ -20,8 +21,8 @@ import * as firebase from 'firebase/app';
 })
 export class HomePage {
 
-  chats: FirebaseListObservable<Chat[]>;
-  users: FirebaseListObservable<User[]>;
+  chats: Observable<Chat[]>;
+  users: Observable<User[]>;
   view: string = 'chats';
 
   constructor(
@@ -39,7 +40,8 @@ export class HomePage {
   }
 
   ionViewDidLoad() {
-    this.chats = this.chatService.chats;
+    this.chats = this.chatService.mapListKeys<Chat>(this.chatService.chats)
+      .map((chats: Chat[]) => chats.reverse());
     this.users = this.userService.users;
 
     this.menuCtrl.enable(true, 'user-menu');
@@ -48,7 +50,8 @@ export class HomePage {
   filterItems(event: any): void {
     let searchTerm: string = event.target.value;
 
-    this.chats = this.chatService.chats;
+    this.chats = this.chatService.mapListKeys<Chat>(this.chatService.chats)
+      .map((chats: Chat[]) => chats.reverse());
     this.users = this.userService.users;
 
     if (searchTerm) {
@@ -56,12 +59,12 @@ export class HomePage {
       switch(this.view) {
 
         case 'chats':
-          this.chats = <FirebaseListObservable<Chat[]>>this.chats
-            .map((chats: Chat[]) => chats.filter((chat: Chat) => (chat.title.toLowerCase().indexOf(searchTerm.toLocaleLowerCase()) > -1)));
+          this.chats = this.chats
+            .map((chats: Chat[]) => chats.filter((chat: Chat) => (chat.title && chat.title.toLowerCase().indexOf(searchTerm.toLocaleLowerCase()) > -1)));
           break;
           
         case 'users':
-          this.users = <FirebaseListObservable<User[]>>this.users
+          this.users = this.users
             .map((users: User[]) => users.filter((user: User) => (user.name.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1)));
           break;
 
@@ -73,15 +76,17 @@ export class HomePage {
 
   onChatCreate(recipientUser: User): void {
 
-    this.userService.currentUser
+    this.userService
+      .mapObjectKey<User>(this.userService.currentUser)
       .first()
       .subscribe((currentUser: User) => {
 
-        this.chatService.getDeepChat(currentUser.$key, recipientUser.$key)
+        this.chatService
+          .mapObjectKey<Chat>(this.chatService.getDeepChat(currentUser.$key, recipientUser.$key))
           .first()
-          .subscribe((chat: Chat) => {
+          .subscribe((chat: Chat) => {            
 
-            if (chat.hasOwnProperty('$value')) {
+            if (!chat.title) {              
 
               let timestamp: Object = firebase.database.ServerValue.TIMESTAMP;
 
@@ -104,11 +109,13 @@ export class HomePage {
 
   onChatOpen(chat: Chat): void {
 
-    let recipientUserId: string = chat.$key;
+    let recipientUserId: string = chat.$key;    
 
-    this.userService.get(recipientUserId)
+    this.userService.mapObjectKey<User>(
+      this.userService.get(recipientUserId)
+    )
       .first()
-      .subscribe((user: User) => {
+      .subscribe((user: User) => {        
 
         this.navCtrl.push(ChatPage, {
           recipientUser: user

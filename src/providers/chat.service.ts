@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { map } from 'rxjs/operators/map';
 
 import { AngularFireAuth } from 'angularfire2/auth';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject, AngularFireAction, DatabaseSnapshot } from 'angularfire2/database';
 
 import { BaseService } from "./base.service";
 import { Chat } from './../models/chat.model';
 
 import * as firebase from 'firebase/app';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class ChatService extends BaseService {
 
-  chats: FirebaseListObservable<Chat[]>;
+  chats: AngularFireList<Chat>;
 
   constructor(
     public afAuth: AngularFireAuth,
@@ -29,30 +30,31 @@ export class ChatService extends BaseService {
       .subscribe((authUser: firebase.User) => {
         if (authUser) {
 
-          this.chats = <FirebaseListObservable<Chat[]>>this.db.list(`/chats/${authUser.uid}`, {
-            query: {
-              orderByChild: 'timestamp'
-            }
-          }).map((chats: Chat[]) => {
+          this.chats = this.db.list<Chat>(`/chats/${authUser.uid}`, 
+            (ref: firebase.database.Reference) => ref.orderByChild('timestamp')
+          );
+          /*.valueChanges()
+          .map((chats: Chat[]) => {
             return chats.reverse();
-          }).catch(this.handleObservableError);
+          }).catch(this.handleObservableError);*/
 
         }
       });
   }
 
-  create(chat: Chat, userId1: string, userId2: string): firebase.Promise<void> {
-    return this.db.object(`/chats/${userId1}/${userId2}`)
+  create(chat: Chat, userId1: string, userId2: string): Promise<void> {
+    return this.db.object<Chat>(`/chats/${userId1}/${userId2}`)
       .set(chat)
       .catch(this.handlePromiseError);
   }
 
-  getDeepChat(userId1: string, userId2: string): FirebaseObjectObservable<Chat> {
-    return <FirebaseObjectObservable<Chat>>this.db.object(`/chats/${userId1}/${userId2}`)
-      .catch(this.handleObservableError);
+  getDeepChat(userId1: string, userId2: string): AngularFireObject<Chat> {
+    return this.db.object<Chat>(`/chats/${userId1}/${userId2}`);
+      /*.valueChanges()
+      .catch(this.handleObservableError);*/
   }
 
-  updatePhoto(chat: FirebaseObjectObservable<Chat>, chatPhoto: string, recipientUserPhoto: string): firebase.Promise<boolean> {
+  updatePhoto(chat: AngularFireObject<Chat>, chatPhoto: string, recipientUserPhoto: string): Promise<boolean> {
     if (chatPhoto != recipientUserPhoto) {
       return chat.update({
         photo: recipientUserPhoto
