@@ -30,8 +30,6 @@ export class MessageService extends BaseService {
     return this.db.list(`/messages/${userId1}-${userId2}`, 
       (ref: firebase.database.Reference) => ref.limitToLast(30).orderByChild('timestamp')
     );
-    /*.valueChanges()
-    .catch(this.handleObservableError);*/
   }
 
 }

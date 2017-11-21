@@ -33,10 +33,6 @@ export class ChatService extends BaseService {
           this.chats = this.db.list<Chat>(`/chats/${authUser.uid}`, 
             (ref: firebase.database.Reference) => ref.orderByChild('timestamp')
           );
-          /*.valueChanges()
-          .map((chats: Chat[]) => {
-            return chats.reverse();
-          }).catch(this.handleObservableError);*/
 
         }
       });
@@ -50,8 +46,6 @@ export class ChatService extends BaseService {
 
   getDeepChat(userId1: string, userId2: string): AngularFireObject<Chat> {
     return this.db.object<Chat>(`/chats/${userId1}/${userId2}`);
-      /*.valueChanges()
-      .catch(this.handleObservableError);*/
   }
 
   updatePhoto(chat: AngularFireObject<Chat>, chatPhoto: string, recipientUserPhoto: string): Promise<boolean> {
