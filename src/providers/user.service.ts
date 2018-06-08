@@ -27,16 +27,16 @@ export class UserService extends BaseService {
     public http: Http
   ) {
     super();
-    this.listenAuthState();    
+    this.listenAuthState();
   }
 
   private setUsers(uidToExclude: string): void {
     this.users = this.mapListKeys<User>(
-      this.db.list<User>(`/users`, 
+      this.db.list<User>(`/users`,
         (ref: firebase.database.Reference) => ref.orderByChild('name')
       )
     )
-    .map((users: User[]) => {      
+    .map((users: User[]) => {
       return users.filter((user: User) => user.$key !== uidToExclude);
     });
   }
@@ -46,7 +46,7 @@ export class UserService extends BaseService {
       .authState
       .subscribe((authUser: firebase.User) => {
         if (authUser) {
-          console.log('Auth state alterado!');          
+          console.log('Auth state alterado!', authUser.uid);
           this.currentUser = this.db.object(`/users/${authUser.uid}`);
           this.setUsers(authUser.uid);
         }
@@ -66,7 +66,7 @@ export class UserService extends BaseService {
   }
 
   userExists(username: string): Observable<boolean> {
-    return this.db.list(`/users`, 
+    return this.db.list(`/users`,
       (ref: firebase.database.Reference) => ref.orderByChild('name').equalTo(username)
     )
     .valueChanges()
